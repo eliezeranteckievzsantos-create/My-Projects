@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STRIDE — Tênis Puma</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--black:#0a0a0a;--white:#f5f5f0;--red:#e8002d;--gray:#888;--dark:#141414;--card:#1a1a1a;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;}
+a{text-decoration:none;color:inherit;}ul{list-style:none;}img{display:block;max-width:100%;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:var(--red);}
+.cursor{position:fixed;width:10px;height:10px;background:var(--red);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid rgba(232,0,45,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .15s ease;}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:500;height:68px;padding:0 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,10,.96);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:6px;cursor:pointer;}
+.logo span{color:var(--red);}
+nav{display:flex;align-items:center;gap:32px;}
+nav a{font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--gray);transition:color .2s;cursor:pointer;}
+nav a:hover{color:var(--white);}
+.cart-btn{display:flex;align-items:center;gap:10px;padding:10px 24px;background:var(--red);font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;border:none;cursor:pointer;color:#fff;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));transition:filter .2s;}
+.cart-btn:hover{filter:brightness(1.2);}
+.cart-count{background:#fff;color:var(--red);border-radius:50%;width:20px;height:20px;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+
+/* PAGES */
+.page{display:none;}.page.active{display:block;}
+
+/* HERO */
+.hero{min-height:100vh;padding-top:68px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:80px 60px 80px 80px;}
+.hero-tag{display:inline-flex;align-items:center;gap:10px;font-size:10px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:var(--red);margin-bottom:24px;}
+.hero-tag::before{content:'';width:30px;height:1px;background:var(--red);}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,10vw,140px);line-height:.88;margin-bottom:24px;}
+.hero-title em{font-style:italic;color:var(--red);display:block;}
+.hero-desc{font-size:16px;font-weight:300;color:rgba(245,245,240,.5);line-height:1.8;max-width:400px;margin-bottom:36px;}
+.hero-price{display:flex;align-items:baseline;gap:14px;margin-bottom:32px;}
+.price-big{font-family:'Bebas Neue',sans-serif;font-size:54px;color:var(--white);}
+.price-old{font-size:20px;color:var(--gray);text-decoration:line-through;}
+.price-badge{font-size:10px;font-weight:700;letter-spacing:2px;background:var(--red);color:#fff;padding:4px 10px;}
+.hero-btns{display:flex;gap:12px;}
+.btn-red{padding:16px 44px;background:var(--red);color:#fff;border:none;cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:4px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));transition:filter .2s,transform .2s;}
+.btn-red:hover{filter:brightness(1.15);transform:translateY(-2px);}
+.btn-outline{padding:14px 28px;background:transparent;color:var(--white);border:1px solid rgba(245,245,240,.2);font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:border-color .2s,background .2s;}
+.btn-outline:hover{border-color:var(--white);background:rgba(255,255,255,.05);}
+.hero-right{position:relative;background:linear-gradient(135deg,#111,#1a0a0a);overflow:hidden;}
+.hero-right::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 60% 50%,rgba(232,0,45,.12) 0%,transparent 70%);}
+.hero-bg-text{position:absolute;bottom:-10px;font-family:'Bebas Neue',sans-serif;font-size:200px;color:rgba(255,255,255,.03);white-space:nowrap;pointer-events:none;}
+.hero-shoe-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.hero-shoe{width:85%;max-width:560px;animation:float 5s ease-in-out infinite;filter:drop-shadow(0 40px 80px rgba(232,0,45,.25));}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-18px) rotate(-1deg)}}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);}
+.stat-item{padding:38px 20px;text-align:center;border-right:1px solid rgba(255,255,255,.06);transition:background .3s;}
+.stat-item:last-child{border-right:none;}
+.stat-item:hover{background:rgba(255,255,255,.02);}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:50px;color:var(--red);}
+.stat-l{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gray);margin-top:4px;}
+
+/* SEC */
+.sec-label{font-size:10px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:var(--red);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.sec-label::before{content:'';width:26px;height:1px;background:var(--red);}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,88px);line-height:.9;margin-bottom:46px;}
+.sec-title span{color:var(--red);}
+
+/* VIDEO */
+.video-sec{padding:100px 80px;background:var(--dark);position:relative;overflow:hidden;}
+.video-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 50% 50%,rgba(232,0,45,.05) 0%,transparent 70%);}
+.video-wrap{max-width:1000px;margin:0 auto;aspect-ratio:16/9;position:relative;}
+.video-wrap::before{content:'';position:absolute;inset:-3px;z-index:-1;background:linear-gradient(135deg,var(--red),transparent,var(--red));opacity:.4;}
+.video-wrap iframe{width:100%;height:100%;border:none;display:block;}
+.video-caption{text-align:center;margin-top:20px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gray);}
+.video-caption strong{color:var(--red);}
+
+/* PRODUTOS */
+.produtos{padding:100px 80px;background:var(--black);}
+.prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;}
+.prod-card{background:var(--card);overflow:hidden;position:relative;transition:transform .3s;cursor:pointer;}
+.prod-card:hover{transform:translateY(-8px);z-index:2;}
+.prod-img{position:relative;overflow:hidden;aspect-ratio:4/3;background:linear-gradient(135deg,#1a1a1a,#0f0f0f);display:flex;align-items:center;justify-content:center;}
+.prod-img img{width:82%;transition:transform .6s;filter:drop-shadow(0 20px 40px rgba(0,0,0,.5));}
+.prod-card:hover .prod-img img{transform:scale(1.08) rotate(3deg);}
+.prod-badge{position:absolute;top:14px;left:14px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;}
+.badge-new{background:var(--red);color:#fff;}
+.badge-hot{background:var(--white);color:#000;}
+.badge-sale{background:#ffb800;color:#000;}
+.prod-actions{position:absolute;bottom:0;left:0;right:0;display:flex;gap:2px;transform:translateY(100%);transition:transform .3s;}
+.prod-card:hover .prod-actions{transform:translateY(0);}
+.prod-add-btn{flex:1;background:var(--red);padding:13px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:3px;color:#fff;border:none;cursor:pointer;transition:filter .2s;}
+.prod-add-btn:hover{filter:brightness(1.2);}
+.prod-view-btn{background:rgba(0,0,0,.85);padding:13px 16px;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--white);border:none;cursor:pointer;white-space:nowrap;transition:background .2s;}
+.prod-view-btn:hover{background:rgba(255,255,255,.1);}
+.prod-info{padding:20px 22px 24px;}
+.prod-brand{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:5px;}
+.prod-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:8px;}
+.prod-desc-short{font-size:12px;color:var(--gray);line-height:1.5;margin-bottom:14px;}
+.prod-footer{display:flex;justify-content:space-between;align-items:center;}
+.prod-price-tag{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--red);}
+
+/* FEATURES */
+.features{background:var(--dark);padding:100px 80px;}
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-top:56px;}
+.feat-item{background:var(--black);padding:38px 30px;position:relative;overflow:hidden;transition:background .3s,transform .3s;}
+.feat-item:hover{background:#111;transform:translateY(-4px);}
+.feat-item::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--red);transform:scaleX(0);transition:transform .4s;}
+.feat-item:hover::after{transform:scaleX(1);}
+.feat-icon{font-size:34px;margin-bottom:16px;}
+.feat-title{font-family:'Bebas Neue',sans-serif;font-size:21px;margin-bottom:9px;}
+.feat-body{font-size:13px;color:var(--gray);line-height:1.7;font-weight:300;}
+
+/* LOCALIZAÇÃO */
+.location{padding:100px 80px;background:var(--black);}
+.loc-wrap{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:50px;}
+.map-frame{position:relative;min-height:500px;overflow:hidden;}
+.map-frame::after{content:'';position:absolute;inset:0;border:2px solid rgba(232,0,45,.3);pointer-events:none;z-index:2;}
+.map-frame::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--red);z-index:3;}
+.map-frame iframe{width:100%;height:100%;min-height:500px;border:none;display:block;filter:grayscale(40%) contrast(1.1);}
+.loc-cards{display:flex;flex-direction:column;gap:3px;}
+.loc-card{background:var(--card);padding:28px 34px;border-left:3px solid var(--red);transition:background .3s;}
+.loc-card:hover{background:#222;}
+.loc-lbl{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:10px;}
+.loc-card h3{font-family:'Bebas Neue',sans-serif;font-size:24px;margin-bottom:8px;}
+.loc-card p{color:var(--gray);font-size:13px;line-height:1.7;margin-bottom:12px;}
+.loc-meta{display:flex;gap:18px;flex-wrap:wrap;}
+.loc-meta span{font-size:12px;color:rgba(245,245,240,.5);}
+.loc-meta strong{color:var(--white);}
+.loc-hours{background:var(--red);padding:28px 34px;}
+.loc-hours h3{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#000;margin-bottom:14px;}
+.hours-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;}
+.hours-grid div p:first-child{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,0,0,.55);margin-bottom:2px;}
+.hours-grid div p:last-child{font-size:14px;color:#000;font-weight:700;}
+
+/* CTA */
+.cta{padding:90px 80px;background:var(--red);text-align:center;position:relative;overflow:hidden;}
+.cta::before{content:'PUMA';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bebas Neue',sans-serif;font-size:280px;color:rgba(0,0,0,.07);white-space:nowrap;pointer-events:none;}
+.cta-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,8vw,108px);color:#000;line-height:.9;margin-bottom:16px;}
+.cta-sub{font-size:17px;font-weight:300;color:rgba(0,0,0,.6);margin-bottom:36px;}
+.cta-form{display:flex;max-width:480px;margin:0 auto;}
+.cta-input{flex:1;background:rgba(0,0,0,.15);border:none;border-bottom:2px solid rgba(0,0,0,.3);color:#000;padding:16px 20px;font-size:15px;outline:none;}
+.cta-input::placeholder{color:rgba(0,0,0,.45);}
+.cta-submit{padding:16px 28px;background:#000;color:var(--red);border:none;cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:3px;white-space:nowrap;transition:background .2s;}
+.cta-submit:hover{background:#1a1a1a;}
+
+/* FOOTER */
+footer{background:#060606;padding:70px 80px 28px;border-top:1px solid rgba(255,255,255,.06);}
+.ft{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;margin-bottom:50px;}
+.ft-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:5px;margin-bottom:14px;}
+.ft-logo span{color:var(--red);}
+.ft-desc{font-size:13px;color:var(--gray);line-height:1.8;max-width:220px;font-weight:300;}
+.ft-ht{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:16px;}
+.ft-links li{margin-bottom:10px;}
+.ft-links a{font-size:13px;color:var(--gray);transition:color .2s,padding-left .2s;cursor:pointer;}
+.ft-links a:hover{color:var(--white);padding-left:5px;}
+.ft-bot{border-top:1px solid rgba(255,255,255,.06);padding-top:24px;display:flex;justify-content:space-between;font-size:12px;color:var(--gray);}
+
+/* PRODUTO PAGE */
+.product-page{padding-top:68px;min-height:100vh;}
+.prod-detail{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 68px);}
+.prod-gallery{background:linear-gradient(135deg,#111,#0f0a0a);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:60px;}
+.prod-gallery::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(232,0,45,.1) 0%,transparent 70%);}
+.prod-gallery img{width:80%;max-width:480px;animation:float 5s ease-in-out infinite;filter:drop-shadow(0 40px 80px rgba(232,0,45,.2));position:relative;z-index:1;}
+.prod-info-panel{padding:70px 60px;display:flex;flex-direction:column;justify-content:center;background:var(--dark);}
+.back-btn{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gray);margin-bottom:36px;cursor:pointer;border:none;background:none;transition:color .2s;}
+.back-btn:hover{color:var(--red);}
+.prod-cat{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
+.prod-title-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,7vw,94px);line-height:.88;margin-bottom:16px;}
+.prod-stars{display:flex;align-items:center;gap:10px;margin-bottom:22px;}
+.stars{color:#ffb800;font-size:14px;}
+.review-count{font-size:12px;color:var(--gray);}
+.prod-full-desc{font-size:15px;color:rgba(245,245,240,.5);line-height:1.9;font-weight:300;margin-bottom:32px;}
+.price-row{display:flex;align-items:baseline;gap:14px;margin-bottom:28px;}
+.price-main{font-family:'Bebas Neue',sans-serif;font-size:60px;color:var(--red);}
+.price-crossed{font-size:22px;color:var(--gray);text-decoration:line-through;}
+.price-pix{font-size:12px;color:#4caf50;font-weight:700;}
+.size-lbl{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--gray);margin-bottom:10px;}
+.sizes-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;}
+.sz{width:52px;height:44px;background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--gray);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+.sz:hover,.sz.sel{border-color:var(--red);color:var(--white);background:rgba(232,0,45,.12);}
+.sz.esgotado{opacity:.3;pointer-events:none;text-decoration:line-through;}
+.qty-row{display:flex;align-items:center;gap:14px;margin-bottom:28px;}
+.qty-lbl{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--gray);}
+.qty-ctrl{display:flex;}
+.qty-btn{width:40px;height:40px;background:var(--card);border:1px solid rgba(255,255,255,.1);color:var(--white);font-size:20px;cursor:pointer;transition:background .2s;}
+.qty-btn:hover{background:rgba(232,0,45,.2);border-color:var(--red);}
+.qty-num{width:50px;height:40px;background:transparent;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);border-left:none;border-right:none;color:var(--white);font-size:15px;font-weight:700;text-align:center;font-family:'DM Sans',sans-serif;}
+.action-row{display:flex;gap:10px;margin-bottom:24px;}
+.btn-add-big{flex:1;padding:16px;background:var(--red);color:#fff;border:none;cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:4px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));transition:filter .2s,transform .2s;}
+.btn-add-big:hover{filter:brightness(1.15);transform:translateY(-1px);}
+.btn-fav{padding:16px 18px;background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--white);cursor:pointer;font-size:20px;transition:border-color .2s,background .2s;}
+.btn-fav:hover{border-color:var(--red);background:rgba(232,0,45,.08);}
+.prod-tags-row{display:flex;gap:8px;flex-wrap:wrap;}
+.ptag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;border:1px solid rgba(255,255,255,.1);color:var(--gray);}
+
+/* CARRINHO SIDEBAR */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:800;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);}
+.cart-overlay.open{opacity:1;pointer-events:all;}
+.cart-sidebar{position:fixed;top:0;right:-500px;width:460px;height:100vh;background:var(--dark);z-index:900;transition:right .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;border-left:1px solid rgba(255,255,255,.07);}
+.cart-sidebar.open{right:0;}
+.cart-hdr{padding:26px 30px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;}
+.cart-hdr h2{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;}
+.cart-hdr h2 span{color:var(--red);}
+.close-cart-btn{background:none;border:none;color:var(--gray);font-size:22px;cursor:pointer;transition:color .2s;}
+.close-cart-btn:hover{color:var(--red);}
+.cart-body{flex:1;overflow-y:auto;padding:18px 30px;}
+.empty-cart{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;color:var(--gray);}
+.empty-cart-icon{font-size:54px;opacity:.25;}
+.empty-cart p{font-size:13px;letter-spacing:1px;}
+.cart-item{display:flex;gap:14px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.cart-item-img{width:78px;height:68px;background:linear-gradient(135deg,#222,#111);display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:2px;}
+.cart-item-img img{width:66px;object-fit:contain;}
+.cart-item-info{flex:1;min-width:0;}
+.ci-brand{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--red);font-weight:700;}
+.ci-name{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;margin-bottom:3px;}
+.ci-detail{font-size:11px;color:var(--gray);}
+.ci-price{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--red);margin-top:4px;}
+.cart-item-del{background:none;border:none;color:var(--gray);font-size:15px;cursor:pointer;align-self:flex-start;transition:color .2s;flex-shrink:0;}
+.cart-item-del:hover{color:var(--red);}
+.cart-ftr{padding:22px 30px;border-top:1px solid rgba(255,255,255,.07);}
+.total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.total-lbl{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gray);}
+.total-val{font-family:'Bebas Neue',sans-serif;font-size:34px;}
+.pix-info{font-size:12px;color:#4caf50;text-align:right;margin-bottom:18px;}
+.btn-checkout{width:100%;padding:17px;background:var(--red);color:#fff;border:none;cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:4px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));transition:filter .2s;}
+.btn-checkout:hover{filter:brightness(1.15);}
+.btn-clear{width:100%;padding:11px;background:transparent;color:var(--gray);border:1px solid rgba(255,255,255,.08);cursor:pointer;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-top:9px;transition:border-color .2s,color .2s;}
+.btn-clear:hover{border-color:var(--red);color:var(--red);}
+
+/* TOAST */
+.toast{position:fixed;bottom:32px;right:32px;z-index:9999;background:var(--red);color:#fff;padding:13px 24px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;pointer-events:none;opacity:0;transform:translateY(16px);transition:opacity .4s,transform .4s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));}
+.toast.on{opacity:1;transform:translateY(0);}
+
+@media(max-width:900px){
+  header{padding:0 20px;}nav{display:none;}
+  .hero{grid-template-columns:1fr;}.hero-right{min-height:300px;}.hero-left{padding:50px 24px;}
+  .stats{grid-template-columns:1fr 1fr;}
+  .video-sec,.produtos,.features,.location,.cta{padding:60px 20px;}
+  .prod-grid{grid-template-columns:1fr 1fr;}
+  .feat-grid{grid-template-columns:1fr 1fr;}
+  .loc-wrap{grid-template-columns:1fr;}
+  .cta-form{flex-direction:column;}
+  footer{padding:50px 20px 20px;}.ft{grid-template-columns:1fr 1fr;gap:36px;}
+  .prod-detail{grid-template-columns:1fr;}
+  .prod-gallery{min-height:280px;}
+  .prod-info-panel{padding:40px 24px;}
+  .cart-sidebar{width:100%;right:-100%;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-hdr">
+    <h2>MEU <span>CARRINHO</span></h2>
+    <button class="close-cart-btn" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="empty-cart"><div class="empty-cart-icon">👟</div><p>Seu carrinho está vazio</p></div>
+  </div>
+  <div class="cart-ftr" id="cartFtr" style="display:none;">
+    <div class="total-row">
+      <span class="total-lbl">Total</span>
+      <span class="total-val" id="totalVal">R$ 0</span>
+    </div>
+    <p class="pix-info" id="pixInfo"></p>
+    <button class="btn-checkout" onclick="checkout()">Finalizar Compra →</button>
+    <button class="btn-clear" onclick="clearCart()">Limpar Carrinho</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header id="hdr">
+  <div class="logo" onclick="goHome()">STR<span>I</span>DE</div>
+  <nav>
+    <a onclick="goHome();setTimeout(()=>scrollTo('produtos'),100)">Coleção</a>
+    <a onclick="goHome();setTimeout(()=>scrollTo('video'),100)">Lookbook</a>
+    <a onclick="goHome();setTimeout(()=>scrollTo('location'),100)">Lojas</a>
+    <a onclick="goHome();setTimeout(()=>scrollTo('contato'),100)">Contato</a>
+  </nav>
+  <button class="cart-btn" onclick="openCart()">👟 Carrinho <span class="cart-count" id="cartCount">0</span></button>
+</header>
+
+<!-- ══ HOME PAGE ══ -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-tag">Nova Coleção 2025</p>
+      <h1 class="hero-title">CORRA<br>MAIS<br><em>Longe.</em></h1>
+      <p class="hero-desc">Tênis Puma projetados para quem não para. Tecnologia de ponta, design que domina as ruas.</p>
+      <div class="hero-price">
+        <span class="price-big">R$ 899</span>
+        <span class="price-old">R$ 1.299</span>
+        <span class="price-badge">-30%</span>
+      </div>
+      <div class="hero-btns">
+        <button class="btn-red" onclick="openProduct(0)">Ver Produto</button>
+        <button class="btn-outline" onclick="addToCart(0,41)">+ Carrinho</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-bg-text">PUMA</div>
+      <div class="hero-shoe-wrap">
+        <img class="hero-shoe" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700&q=80&auto=format&fit=crop" alt="Puma">
+      </div>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat-item"><p class="stat-n">75+</p><p class="stat-l">Modelos</p></div>
+    <div class="stat-item"><p class="stat-n">12k</p><p class="stat-l">Clientes</p></div>
+    <div class="stat-item"><p class="stat-n">48h</p><p class="stat-l">Entrega</p></div>
+    <div class="stat-item"><p class="stat-n">30d</p><p class="stat-l">Troca Garantida</p></div>
+  </div>
+
+  <section class="video-sec" id="video">
+    <p class="sec-label">Lookbook</p>
+    <h2 class="sec-title">Sinta o<br><span>Movimento.</span></h2>
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/Bcpu-jqAL6w?rel=0&modestbranding=1&color=white" title="Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <p class="video-caption">STRIDE × <strong>PUMA</strong> · Coleção 2025</p>
+  </section>
+
+  <section class="produtos" id="produtos">
+    <p class="sec-label">Coleção</p>
+    <h2 class="sec-title" style="margin-bottom:50px;">Nossos<br><span>Tênis</span></h2>
+    <ul class="prod-grid" id="prodGrid"></ul>
+  </section>
+
+  <section class="features">
+    <p class="sec-label">Por que STRIDE</p>
+    <h2 class="sec-title">Nossa<br><span>Proposta</span></h2>
+    <div class="feat-grid">
+      <div class="feat-item"><div class="feat-icon">🚀</div><h3 class="feat-title">Entrega Expressa</h3><p class="feat-body">Receba em até 48h nas capitais com rastreamento em tempo real.</p></div>
+      <div class="feat-item"><div class="feat-icon">✅</div><h3 class="feat-title">100% Original</h3><p class="feat-body">Revendedor oficial Puma. Nota fiscal e garantia de fábrica inclusos.</p></div>
+      <div class="feat-item"><div class="feat-icon">🔄</div><h3 class="feat-title">Troca Fácil</h3><p class="feat-body">Não serviu? Troca em 30 dias. Frete de devolução por nossa conta.</p></div>
+      <div class="feat-item"><div class="feat-icon">💳</div><h3 class="feat-title">Parcelamento</h3><p class="feat-body">12x sem juros no cartão. Pix com 5% de desconto adicional.</p></div>
+    </div>
+  </section>
+
+  <section class="location" id="location">
+    <p class="sec-label">Nossas Lojas</p>
+    <h2 class="sec-title">Onde<br><span>Estamos</span></h2>
+    <div class="loc-wrap">
+      <div class="map-frame">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.0!2d-46.6554!3d-23.5630!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c8da0aa315%3A0xd59f9431f2c9776a!2sAv.%20Paulista%2C%20S%C3%A3o%20Paulo!5e0!3m2!1spt-BR!2sbr!4v1710000000000!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="loc-cards">
+        <div class="loc-card">
+          <p class="loc-lbl">📍 Loja Principal</p>
+          <h3>STRIDE Paulista</h3>
+          <p>Av. Paulista, 1500 — Loja 12<br>Bela Vista — São Paulo, SP<br>CEP 01310-100</p>
+          <div class="loc-meta"><span>📞 <strong>(11) 3456-7800</strong></span><span>🌐 <strong>stride.com.br</strong></span></div>
+        </div>
+        <div class="loc-card">
+          <p class="loc-lbl">📍 Loja Vila Olímpia</p>
+          <h3>STRIDE Vila Olímpia</h3>
+          <p>Rua Funchal, 411 — Piso L1<br>Vila Olímpia — São Paulo, SP<br>CEP 04551-060</p>
+          <div class="loc-meta"><span>📞 <strong>(11) 3456-7900</strong></span><span>🌐 <strong>stride.com.br</strong></span></div>
+        </div>
+        <div class="loc-hours">
+          <h3>Horários de Funcionamento</h3>
+          <div class="hours-grid">
+            <div><p>Segunda a Sexta</p><p>10h às 22h</p></div>
+            <div><p>Sábado</p><p>10h às 20h</p></div>
+            <div><p>Domingo</p><p>12h às 18h</p></div>
+            <div><p>Feriados</p><p>12h às 18h</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta" id="contato">
+    <h2 class="cta-title">10% OFF<br>na Primeira Compra</h2>
+    <p class="cta-sub">Cadastre seu e-mail e ganhe desconto + novidades em primeira mão.</p>
+    <div class="cta-form">
+      <input type="email" class="cta-input" id="ctaEmail" placeholder="seu@email.com">
+      <button class="cta-submit" onclick="signUp()">Quero Desconto →</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="ft">
+      <div>
+        <p class="ft-logo">STR<span>I</span>DE</p>
+        <p class="ft-desc">Revendedor oficial Puma. Tênis originais com entrega rápida e troca garantida.</p>
+      </div>
+      <div>
+        <p class="ft-ht">Coleção</p>
+        <ul class="ft-links">
+          <li><a onclick="scrollTo('produtos')">Running</a></li>
+          <li><a onclick="scrollTo('produtos')">Originals</a></li>
+          <li><a onclick="scrollTo('produtos')">Sport Style</a></li>
+          <li><a onclick="scrollTo('produtos')">Basketball</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="ft-ht">Ajuda</p>
+        <ul class="ft-links">
+          <li><a>Rastrear Pedido</a></li>
+          <li><a>Trocas e Devoluções</a></li>
+          <li><a>Guia de Tamanhos</a></li>
+          <li><a>FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="ft-ht">Contato</p>
+        <ul class="ft-links">
+          <li><a>WhatsApp</a></li>
+          <li><a>Instagram</a></li>
+          <li><a>E-mail</a></li>
+          <li><a onclick="scrollTo('location')">Lojas Físicas</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ft-bot">
+      <span>© 2025 STRIDE. Revendedor Oficial Puma.</span>
+      <span>Privacidade · Termos · #RunWithPuma 👟</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ══ PRODUTO PAGE ══ -->
+<div class="page" id="page-product">
+  <div class="product-page">
+    <div class="prod-detail">
+      <div class="prod-gallery">
+        <img id="pdImg" src="" alt="">
+      </div>
+      <div class="prod-info-panel">
+        <button class="back-btn" onclick="goHome()">← Voltar à Loja</button>
+        <p class="prod-cat" id="pdCat"></p>
+        <h1 class="prod-title-big" id="pdName"></h1>
+        <div class="prod-stars">
+          <span class="stars">★★★★★</span>
+          <span class="review-count" id="pdReviews"></span>
+        </div>
+        <p class="prod-full-desc" id="pdDesc"></p>
+        <div class="price-row">
+          <span class="price-main" id="pdPrice"></span>
+          <span class="price-crossed" id="pdOld"></span>
+          <span class="price-pix" id="pdPix"></span>
+        </div>
+        <p class="size-lbl">Escolha o Tamanho</p>
+        <div class="sizes-row" id="pdSizes"></div>
+        <div class="qty-row">
+          <span class="qty-lbl">Quantidade</span>
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(-1)">−</button>
+            <input class="qty-num" id="qtyVal" type="text" value="1" readonly>
+            <button class="qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+        </div>
+        <div class="action-row">
+          <button class="btn-add-big" onclick="addFromProduct()">Adicionar ao Carrinho</button>
+          <button class="btn-fav" onclick="showToast('❤️ Adicionado aos favoritos!')">♡</button>
+        </div>
+        <div class="prod-tags-row" id="pdTags"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DADOS DOS PRODUTOS ──
+const produtos = [
+  {
+    id:0, brand:'Puma Running', name:'Nitro Elite 2',
+    desc:'Placa de carbono, amortecimento Nitro Foam de última geração. Para quem leva a corrida a sério e busca performance máxima.',
+    price:899, old:1299, img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700&q=80&auto=format&fit=crop',
+    badge:'new', sizes:[38,39,40,41,42,43], tags:['Running','Carbono','Nitro Foam']
+  },
+  {
+    id:1, brand:'Puma Originals', name:'Suede Classic XXI',
+    desc:'Ícone das ruas desde 1968. Cabedal em camurça premium, sola de borracha vulcanizada. Clássico reinventado para 2025.',
+    price:499, old:699, img:'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=700&q=80&auto=format&fit=crop',
+    badge:'hot', sizes:[38,39,40,41,42,43,44], tags:['Originals','Clássico','Camurça']
+  },
+  {
+    id:2, brand:'Puma Sport Style', name:'RS-X Efekt',
+    desc:'Tecnologia Running System reinventada. Chunky, ousado, com amortecimento superior. O tênis que domina qualquer look.',
+    price:599, old:799, img:'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=700&q=80&auto=format&fit=crop',
+    badge:'sale', sizes:[39,40,41,42,43,44], tags:['RS-X','Chunky','Street']
+  },
+  {
+    id:3, brand:'Puma Running', name:'Deviate Nitro 2',
+    desc:'Estabilidade e velocidade em equilíbrio perfeito. Ideal para treinos longos e intensos com suporte superior.',
+    price:749, old:999, img:'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=700&q=80&auto=format&fit=crop',
+    badge:null, sizes:[38,39,40,41,42,43], tags:['Running','Estabilidade','Treino']
+  },
+  {
+    id:4, brand:'Puma Running', name:'Velocity Nitro 3',
+    desc:'Leve como o vento. Foam Nitro de última geração para máximo retorno de energia. Feito para corredores ambiciosos.',
+    price:679, old:899, img:'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=700&q=80&auto=format&fit=crop',
+    badge:'new', sizes:[38,39,40,41,42], tags:['Running','Leve','Nitro']
+  },
+  {
+    id:5, brand:'Puma Basketball', name:'Clyde All-Pro',
+    desc:'Do court para as ruas. Herança do basquete com estética streetwear premium. Exclusivo e inconfundível.',
+    price:829, old:1099, img:'https://images.unsplash.com/photo-1584735175315-9d5df23860e6?w=700&q=80&auto=format&fit=crop',
+    badge:'hot', sizes:[39,40,41,42,43,44], tags:['Basketball','Street','Premium']
+  }
+];
+
+// ── CARRINHO ──
+let cart = [];
+let selectedSize = null;
+let currentProduct = null;
+
+function renderCart() {
+  const body = document.getElementById('cartBody');
+  const ftr = document.getElementById('cartFtr');
+  const count = document.getElementById('cartCount');
+  count.textContent = cart.reduce((a,i)=>a+i.qty,0);
+  if(cart.length === 0) {
+    body.innerHTML = '<div class="empty-cart"><div class="empty-cart-icon">👟</div><p>Seu carrinho está vazio</p></div>';
+    ftr.style.display = 'none';
+    return;
+  }
+  ftr.style.display = 'block';
+  body.innerHTML = cart.map((item,i) => `
+    <div class="cart-item">
+      <div class="cart-item-img"><img src="${item.img}" alt="${item.name}"></div>
+      <div class="cart-item-info">
+        <p class="ci-brand">${item.brand}</p>
+        <p class="ci-name">${item.name}</p>
+        <p class="ci-detail">Tam. ${item.size} · Qtd: ${item.qty}</p>
+        <p class="ci-price">R$ ${(item.price * item.qty).toLocaleString('pt-BR')}</p>
+      </div>
+      <button class="cart-item-del" onclick="removeFromCart(${i})">✕</button>
+    </div>
+  `).join('');
+  const total = cart.reduce((a,i)=>a+(i.price*i.qty),0);
+  document.getElementById('totalVal').textContent = 'R$ ' + total.toLocaleString('pt-BR');
+  document.getElementById('pixInfo').textContent = `No Pix: R$ ${(total*0.95).toLocaleString('pt-BR')} (5% OFF)`;
+}
+
+function addToCart(idx, size) {
+  const p = produtos[idx];
+  const existing = cart.find(i=>i.id===p.id && i.size===size);
+  if(existing) { existing.qty++; }
+  else { cart.push({...p, size, qty:1}); }
+  renderCart();
+  showToast('👟 ' + p.name + ' adicionado!');
+}
+
+function removeFromCart(i) { cart.splice(i,1); renderCart(); }
+function clearCart() { cart=[]; renderCart(); }
+function checkout() { showToast('🎉 Pedido realizado! Obrigado!'); cart=[]; renderCart(); closeCart(); }
+
+function openCart() {
+  document.getElementById('cartOverlay').classList.add('open');
+  document.getElementById('cartSidebar').classList.add('open');
+}
+function closeCart() {
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('cartSidebar').classList.remove('open');
+}
+
+// ── PRODUTO PAGE ──
+function openProduct(idx) {
+  const p = produtos[idx];
+  currentProduct = p;
+  selectedSize = null;
+  document.getElementById('pdImg').src = p.img;
+  document.getElementById('pdCat').textContent = p.brand;
+  document.getElementById('pdName').textContent = p.name;
+  document.getElementById('pdDesc').textContent = p.desc;
+  document.getElementById('pdPrice').textContent = 'R$ ' + p.price.toLocaleString('pt-BR');
+  document.getElementById('pdOld').textContent = 'R$ ' + p.old.toLocaleString('pt-BR');
+  document.getElementById('pdPix').textContent = 'Pix: R$ ' + (p.price*0.95).toLocaleString('pt-BR');
+  document.getElementById('pdReviews').textContent = Math.floor(Math.random()*80+20) + ' avaliações';
+  document.getElementById('qtyVal').value = 1;
+  const sizesEl = document.getElementById('pdSizes');
+  sizesEl.innerHTML = p.sizes.map(s=>`<button class="sz" onclick="selectSize(${s},this)">${s}</button>`).join('');
+  const tagsEl = document.getElementById('pdTags');
+  tagsEl.innerHTML = p.tags.map(t=>`<span class="ptag">${t}</span>`).join('');
+  document.getElementById('page-home').classList.remove('active');
+  document.getElementById('page-product').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function selectSize(s, el) {
+  selectedSize = s;
+  document.querySelectorAll('.sz').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function changeQty(d) {
+  const el = document.getElementById('qtyVal');
+  let v = parseInt(el.value) + d;
+  if(v < 1) v = 1;
+  if(v > 10) v = 10;
+  el.value = v;
+}
+
+function addFromProduct() {
+  if(!selectedSize) { showToast('⚠️ Escolha um tamanho!'); return; }
+  const qty = parseInt(document.getElementById('qtyVal').value);
+  const existing = cart.find(i=>i.id===currentProduct.id && i.size===selectedSize);
+  if(existing) existing.qty += qty;
+  else cart.push({...currentProduct, size:selectedSize, qty});
+  renderCart();
+  showToast('👟 ' + currentProduct.name + ' adicionado!');
+  openCart();
+}
+
+function goHome() {
+  document.getElementById('page-product').classList.remove('active');
+  document.getElementById('page-home').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── RENDER GRID ──
+function renderGrid() {
+  const badgeMap = {new:'badge-new',hot:'badge-hot',sale:'badge-sale'};
+  const badgeText = {new:'Novo',hot:'🔥 Top',sale:'-25%'};
+  document.getElementById('prodGrid').innerHTML = produtos.map((p,i)=>`
+    <li class="prod-card">
+      <div class="prod-img" onclick="openProduct(${i})">
+        ${p.badge ? `<span class="prod-badge ${badgeMap[p.badge]}">${badgeText[p.badge]}</span>` : ''}
+        <img src="${p.img}" alt="${p.name}">
+        <div class="prod-actions">
+          <button class="prod-add-btn" onclick="event.stopPropagation();addToCart(${i},${p.sizes[2]||p.sizes[0]})">+ Carrinho</button>
+          <button class="prod-view-btn" onclick="event.stopPropagation();openProduct(${i})">Ver →</button>
+        </div>
+      </div>
+      <div class="prod-info">
+        <p class="prod-brand">${p.brand}</p>
+        <h3 class="prod-name">${p.name}</h3>
+        <p class="prod-desc-short">${p.desc.substring(0,70)}...</p>
+        <div class="prod-footer">
+          <span class="prod-price-tag">R$ ${p.price.toLocaleString('pt-BR')}</span>
+          <button class="btn-outline" style="padding:8px 16px;font-size:10px;" onclick="openProduct(${i})">Detalhes</button>
+        </div>
+      </div>
+    </li>
+  `).join('');
+}
+
+// ── UTILS ──
+function scrollTo(id) { document.getElementById(id)?.scrollIntoView({behavior:'smooth'}); }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'), 2800);
+}
+function signUp() {
+  const inp = document.getElementById('ctaEmail');
+  if(!inp.value||!inp.value.includes('@')){inp.style.borderBottom='2px solid #900';return;}
+  inp.style.borderBottom='';
+  showToast('🎉 10% OFF enviado pro seu e-mail!');
+  inp.value='';
+}
+
+// ── CURSOR ──
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove',e=>{
+  cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px';
+  ring.style.left=e.clientX+'px'; ring.style.top=e.clientY+'px';
+});
+document.querySelectorAll('button,a,.prod-card,.sz').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.transform='translate(-50%,-50%) scale(1.8)';ring.style.borderColor='rgba(232,0,45,.7)';});
+  el.addEventListener('mouseleave',()=>{ring.style.transform='translate(-50%,-50%) scale(1)';ring.style.borderColor='rgba(232,0,45,.4)';});
+});
+
+// ── SCROLL HEADER ──
+window.addEventListener('scroll',()=>{
+  document.getElementById('hdr').style.background = window.scrollY>60?'rgba(10,10,10,1)':'rgba(10,10,10,.96)';
+});
+
+// INIT
+renderCart();
+renderGrid();
+</script>
+</body>
+</html>
